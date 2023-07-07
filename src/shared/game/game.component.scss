@@ -1,0 +1,44 @@
+.game-card {
+  position: relative;
+  &-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+  }
+  &-title {
+    cursor: pointer;
+    margin: 0;
+  }
+  &-info {
+    width: 2rem !important;
+    height: 2rem !important;
+  }
+
+  &-image {
+    border-radius: 15px;
+    width: 100%;
+    cursor: pointer;
+  }
+
+  &-type {
+    position: absolute;
+    top: 10px;
+    left: 0;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .game-card {
+    &-meta {
+      margin-top: 1rem;
+    }
+    &-title {
+      font-size: 1rem;
+    }
+    &-info {
+      width: 1rem !important;
+      height: 1rem !important;
+    }
+  }
+}
+

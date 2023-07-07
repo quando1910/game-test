@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { IGame } from './game.model';
 
 @Injectable({
@@ -15,14 +14,14 @@ export class GameService {
     { fileName: 'RaptorDoublemax.webp', nameGame: 'Raptor Double max' },
     { fileName: 'WinzToTheMoon.webp', nameGame: ' Winz To The Moon' },
   ];
-  namesImageType = ['hot.svg', 'new.svg', 'promo.svg'];
-  arrayGames: IGame[] = [];
+  types = ['hot', 'new', 'promo'];
+  games: IGame[] = [];
   total = 100;
 
   constructor() {}
 
   randomListGames() {
-    this.arrayGames = Array(this.total)
+    this.games = Array(this.total)
       .fill(undefined)
       .map((_, i) => {
         // random file background game
@@ -33,17 +32,17 @@ export class GameService {
 
         // random file type game
         const randomIndexType = Math.floor(
-          Math.random() * this.namesImageType.length
+          Math.random() * this.types.length
         );
-        const type = this.namesImageType[randomIndexType];
+        const type = this.types.slice(0, randomIndexType)
 
         return {
           id: i + 1,
-          srcImg: `./assets/images/${name.fileName}`,
-          typeGame: `./assets/images/${type}`,
-          nameGame: name.nameGame,
+          src: `./assets/images/${name.fileName}`,
+          type,
+          name: name.nameGame,
         };
       });
-    return this.arrayGames;
+    return this.games;
   }
 }

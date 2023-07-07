@@ -1,6 +1,6 @@
 export interface IGame {
   id: number;
-  srcImg: string;
-  typeGame: string;
-  nameGame: string;
+  src: string;
+  type: string[];
+  name: string;
 }

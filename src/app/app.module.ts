@@ -5,16 +5,20 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { GameDetailComponent } from './game-detail/game-detail.component';
 import { GameListComponent } from './game-list/game-list.component';
+import { SlickCarouselModule } from 'src/shared/carousel';
+import { GameComponent } from 'src/shared/game/game.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     GameDetailComponent,
-    GameListComponent
+    GameListComponent,
+    GameComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    SlickCarouselModule
   ],
   providers: [],
   bootstrap: [AppComponent]

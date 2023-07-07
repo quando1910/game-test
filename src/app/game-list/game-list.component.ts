@@ -1,8 +1,8 @@
-import { OnInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { OnInit, Component, ViewChild } from '@angular/core';
 import { GameService } from './game.service';
 import { IGame } from './game.model';
-import { Observable, concatMap, delay, from, of } from 'rxjs';
-import { Router } from '@angular/router';
+import { delay, of } from 'rxjs';
+import { SlickCarouselComponent } from 'src/shared/carousel';
 
 @Component({
   selector: 'app-game-list',
@@ -10,63 +10,38 @@ import { Router } from '@angular/router';
   styleUrls: ['./game-list.component.scss'],
 })
 export class GameListComponent implements OnInit {
-  listsGame: IGame[] = [];
-  listsAll: IGame[] = [];
-  currentPage = 0;
-  pageSize = 6;
-  numberOfPage = 0;
-
-  constructor(private gameService: GameService, private router: Router) {
-    console.log(window.innerWidth);
-    this.listsAll = this.gameService.randomListGames();
-
-    const widthWindow = window.innerWidth;
-    if (widthWindow > 1025) {
-      this.pageSize = 8;
-    }
-    if (widthWindow > 1441) {
-      this.pageSize = 10;
-    }
-    if (widthWindow > 1921) {
-      this.pageSize = 12;
-    }
-
-    this.numberOfPage = Math.ceil(this.gameService.total / this.pageSize);
+  allGames: IGame[] = [];
+  chunkGames: IGame[][] = [];
+  loading: boolean = false;
+  slideConfig = {
+    arrows: false
   }
+  chunkSize = 12;
+  @ViewChild('slickModal', { static: true }) slickModal?: SlickCarouselComponent;
+
+  constructor(private gameService: GameService) {}
 
   ngOnInit(): void {
     this.getListGame();
   }
 
   getListGame() {
-    const start = this.currentPage * this.pageSize;
-    const end = (this.currentPage + 1) * this.pageSize;
-    const list = this.listsAll.slice(start, end);
-
-    return of(list)
+    this.loading = true;
+    return of(this.gameService.randomListGames())
       .pipe(delay(500))
-      .subscribe((item) => {
-        this.listsGame = item;
-        console.log(item);
+      .subscribe((res) => {
+        this.loading = false;
+        this.allGames = res;
+        this.chunkGamesArray();
       });
   }
-  nextPage() {
-    if (this.currentPage + 1 === this.numberOfPage) {
-      this.currentPage = 0;
-      this.getListGame();
-    } else {
-      this.currentPage += 1;
-      this.getListGame();
+
+  chunkGamesArray() {
+    this.chunkGames = [];
+    for (let i = 0; i < this.allGames.length; i += this.chunkSize) {
+      const chunk = this.allGames.slice(i, i + this.chunkSize);
+      this.chunkGames.push(chunk);
     }
-  }
-  previous() {
-    if (this.currentPage === 0) {
-      this.currentPage = this.numberOfPage;
-    }
-    this.currentPage -= 1;
-    this.getListGame();
-  }
-  navigateDetail(id: number) {
-    this.router.navigateByUrl(`game-detail/${id}`);
+    this.slickModal?.initSlick();
   }
 }

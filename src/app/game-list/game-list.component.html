@@ -1,32 +1,29 @@
 <div class="game-list-page">
   <div class="header">
-    <h2 class="title-page">Most Popular</h2>
+    <h2 class="title-page">
+      <b>Most</b> Popular
+    </h2>
     <div class="show-all">
-      <span>Show all</span><img src="./assets/images/arrow-icon.PNG" />
+      <span>Show all</span>
+      <img class="show-all-icon" src="./assets/icons/arrow-forward-outline.svg" />
     </div>
   </div>
-  <div class="content">
-    <div class="previous" (click)="previous()">
-      <div class="btn-previous-page">
-        <img src="./assets/images/pre.PNG"/>
-      </div>
-    </div>
-    <div class="grid-container">
-      <div class="grid-item" *ngFor="let item of listsGame" (click)="navigateDetail(item.id)">
-        <img class="type-game" [src]="item.typeGame" />
-        <div>
-          <img class="image-game" [src]="item.srcImg" />
+  <div class="content container">
+    <p class="loading" *ngIf="loading">Loading...</p>
+    <div *ngIf="!loading" class="carousel-container">
+      <slick-carousel #slickModal="slick-carousel" class="carousel" [config]="slideConfig">
+        <div ngxSlickItem *ngFor="let gameGroup of chunkGames" class="slide carousel-cell grid-container">
+          <div class="grid-item" *ngFor="let item of gameGroup">
+            <app-game [data]="item"></app-game>
+          </div>
         </div>
-        <div class="title">
-          <h2>{{ item.nameGame }}</h2>
-          <img class="info-icon" src="./assets/images/infor-icon.PNG" />
-        </div>
-      </div>
-    </div>
-    <div class="next">
-      <div class="btn-next-page" (click)="nextPage()">
-        <img src="./assets/images/next.PNG"/>
-      </div>
+      </slick-carousel>
+      <button class="btn-carousel btn-carousel-prev" (click)="slickModal.slickPrev()">
+        <img src="./assets/icons/arrow-back-outline.svg" >
+      </button>
+      <button class="btn-carousel btn-carousel-next" (click)="slickModal.slickNext()">
+        <img src="./assets/icons/arrow-forward-outline.svg" >
+      </button>
     </div>
   </div>
 </div>
